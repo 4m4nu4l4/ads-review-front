@@ -2,25 +2,29 @@ import { useState } from 'react';
 import './styles.css'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
+import { createUser } from '../../api/user';
+ 
 export default function SignUp() {
   const navigate = useNavigate();
-
+ 
   const handleBackClick = () => {
     navigate(-1);
   };
-
+ 
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-
+ 
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-
+ 
       // Devera criar usuario
-      if(true){
-        // se der certo redirecionar
+      const response = await createUser({
+        nome, email, senha
+      })
+      if(response.id){
+        // se houver um ID, ele redireciona para tela de login
         return navigate('/login')
       } else {
         return toast('Erro inesperado, tente novamente mais tarde!')
@@ -36,7 +40,7 @@ export default function SignUp() {
       toast('Erro inesperado, tente novamente mais tarde!');
     }
   };
-
+ 
   return (
     <div className="signup-container">
       <form className="signup-form">

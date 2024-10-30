@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './styles.css'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { loginUser } from '../../api/user';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -25,8 +26,10 @@ export default function Login() {
     }
 
     try {
+      const response = await loginUser(email, senha)
         // Devera fazer a requisição de login
-        if (true) {
+        if (response.token) {
+          localStorage.setItem('token', response.token)
             // se der certo saltva o token no storage e redirecionar
             return navigate('/');
         }
@@ -34,7 +37,7 @@ export default function Login() {
         if (error.response.status === 403) {
           return toast("Sem permissão.");
         }
-        if (error.response.status === 401 || error.response.status === 404) {
+        if (error.response.status === 400) {
           return toast('Email ou senha inválido, tente novamente!');
         }
         return toast('Erro inesperado, tente novamente mais tarde!');
